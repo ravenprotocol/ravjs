@@ -1,5 +1,6 @@
 (function () {
-    var socket_server_url = 'ws://' + window.location.hostname + ':9999/ravjs';
+    var RAVSOCK_SERVER_URL = "0.0.0.0";
+    var socket_server_url = 'ws://'+RAVSOCK_SERVER_URL+':9999/ravjs';
 
     var socket = io(socket_server_url, {
         query: {
