@@ -1,6 +1,6 @@
 (function () {
     var RAVSOCK_SERVER_URL = "0.0.0.0";
-    var socket_server_url = 'ws://'+RAVSOCK_SERVER_URL+':9999/ravjs';
+    var socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':9999/ravjs';
 
     var socket = io(socket_server_url, {
         query: {
@@ -413,19 +413,15 @@
             case "gather":
                 try {
                     x = tf.tensor(payload.values[0]);
+                    indices = payload.values[1];
                     let params = payload.params;
-                    if ('indices' in params) {
-                        let indices = params.indices;
-                        if ('axis' in params) {
-                            let axis = params.axis;
-                            result = x.gather(indices, axis).arraySync();
-                        } else {
-                            result = x.gather(indices).arraySync();
-                        }
-                        emit_result(payload, result);
+                    if ('axis' in params) {
+                        let axis = params.axis;
+                        result = x.gather(indices, axis).arraySync();
                     } else {
-                        emit_error(payload, {message: "The parameter 'indices' is missing"});
+                        result = x.gather(indices).arraySync();
                     }
+                    emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
                 }
@@ -501,14 +497,9 @@
             case "find_indices":
                 try {
                     x = payload.values[0];
-                    let params = payload.params;
-                    if ('values' in params) {
-                        let values = params.values;
-                        result = tf.findIndices(x, values);
-                        emit_result(payload, result);
-                    } else {
-                        emit_error(payload, {message: "The parameter 'values' is missing"});
-                    }
+                    values = payload.values[1];
+                    result = tf.findIndices(x, values);
+                    emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
                 }
@@ -853,7 +844,7 @@
                             outputs.push(output);
 
                             // TODO: fix the logic
-                            if(outputs.length === x.size){
+                            if (outputs.length === x.size) {
                                 emit_result(payload, outputs);
                             }
                         });
@@ -888,6 +879,21 @@
         }
         console.log("before:", indices);
         return indices;
+    };
+
+    /**
+     * Sort an array
+     */
+    tf.sort = function (x) {
+        x = tf.tensor(x);
+        try {
+            if (x.shape.length !== 1)
+                return null;
+            return  tf.reverse(tf.topk(x, x.shape[0]).values);
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
     };
 
     function emit_result(payload, result) {
