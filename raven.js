@@ -504,6 +504,15 @@
                     emit_error(payload, error);
                 }
                 break;
+            case "shape":
+                try {
+                    x = tf.tensor(payload.values[0]);
+                    result = x.shape;
+                    emit_result(payload, result);
+                } catch (error) {
+                    emit_error(payload, error);
+                }
+                break;
             case "greater":
                 try {
                     x = tf.tensor(payload.values[0]);
@@ -852,6 +861,21 @@
                         emit_error(payload, "Parameter 'operation' is missing");
                     }
 
+                } catch (error) {
+                    emit_error(payload, error);
+                }
+                break;
+            case "one_hot_encoding":
+                try {
+                    x = tf.tensor(payload.values[0], null, 'int32');
+                    let params = payload.params;
+                    if ('depth' in params) {
+                        depth = params.depth;
+                        result = tf.oneHot(x, depth).arraySync();
+                        emit_result(payload, result);
+                    } else {
+                        emit_result(payload, "Parameter 'depth' is missing");
+                    }
                 } catch (error) {
                     emit_error(payload, error);
                 }
