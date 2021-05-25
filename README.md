@@ -13,6 +13,17 @@ https://github.com/SeleniumHQ/docker-selenium
 #### Install dependencies
 
     pip3 install -r requirements.txt
+    
+#### Now create a cluster of workers by executing a single command:
+
+    sh create_local_cluster.sh 5   # Specify the number of workers to create
+    
+Note: change RAVSOCK_SERVER_URL to "host.docker.internal" in the raven.js file 
+
+
+## Manually
+
+Start 3 workers with the help of following commands
 
 #### Start containers
 
@@ -22,8 +33,10 @@ https://github.com/SeleniumHQ/docker-selenium
 
     python3 open_workers.py
     
-#### Access workers for debugging
+#### Access workers for debugging purposes
     
-    http://127.0.0.1:7900  # Password: secret
     http://127.0.0.1:7901  # Password: secret
     http://127.0.0.1:7902  # Password: secret
+    http://127.0.0.1:7903  # Password: secret
+    http://127.0.0.1:7904  # Password: secret
+    http://127.0.0.1:7905  # Password: secret
