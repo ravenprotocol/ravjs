@@ -104,6 +104,15 @@
                     emit_error(payload, error);
                 }
                 break;
+            case "positive":
+                try {
+                    x = tf.tensor(payload.values[0]);
+                    result = +(x.arraySync());
+                    emit_result(payload, result);
+                } catch (error) {
+                    emit_error(payload, error)
+                }
+                break;
             case "negation":
                 try {
                     x = tf.tensor(payload.values[0]);
