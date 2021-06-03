@@ -1,18 +1,23 @@
 (function () {
-    var RAVSOCK_SERVER_URL = "0.0.0.0";
-    //var RAVSOCK_SERVER_URL = "host.docker.internal";
-    var socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':9999/ravjs';
-
-    var socket = io(socket_server_url, {
+    const RAVSOCK_SERVER_URL = "0.0.0.0";
+    //const RAVSOCK_SERVER_URL = "host.docker.internal";
+    const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':9999/ravjs';
+    let socket = io(socket_server_url, {
         query: {
             "client_name": "ravjs"
         }
     });
 
+    let timeoutId = null;
+    let ops = {};
+    const opTimeout = 6000;
+    const initialTimeout = 1000;
+
     socket.on('op', function (d) {
         $(".clientStatus").append("Op received");
+        let data = JSON.parse(d);
 
-        var data = JSON.parse(d);
+        ops[data.op_id] = {id: data.op_id, status: 'pending', startTime: Date.now(), endTime: null, data: data};
 
         //Acknowledge op
         socket.emit("acknowledge", JSON.stringify({
@@ -26,6 +31,9 @@
         if (operation_type && operator) {
             compute(data);
         }
+
+        stopTimer();
+        timeoutId = setTimeout(waitInterval(), opTimeout);
     });
 
     socket.on('connect', function (d) {
@@ -52,6 +60,45 @@
             "message": "PONG"
         }));
     });
+
+    function waitInterval() {
+        console.log("Time started");
+        return function() {
+            console.log("Function called");
+            for (const key in ops) {
+                let op = ops[key];
+                if (op.status === "pending" || Date.now() - op.startTime < opTimeout) {
+                    stopTimer();
+                    timeoutId = setTimeout(waitInterval(), opTimeout);
+                    return
+                }
+
+                 if (op.status === "pending" && Date.now() - op.startTime > opTimeout) {
+                     op.status = "failure";
+                     op.endTime = Date.now();
+                     ops[key] = ops;
+
+                     emit_error(op.data, "OpTimeout error")
+                 }
+            }
+
+            socket.emit("get_op", JSON.stringify({
+                "message": "Send me an aop"
+            }));
+
+            stopTimer();
+            timeoutId = setTimeout(waitInterval(), opTimeout);
+        }
+    }
+
+    function stopTimer(){
+        console.log("Timer stopped");
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    timeoutId = setTimeout(waitInterval(), initialTimeout);
 
     function compute(payload) {
         console.log("Computing " + payload.operator);
@@ -923,7 +970,7 @@
         try {
             if (x.shape.length !== 1)
                 return null;
-            return  tf.reverse(tf.topk(x, x.shape[0]).values);
+            return tf.reverse(tf.topk(x, x.shape[0]).values);
         } catch (error) {
             console.log(error);
             return null;
@@ -950,6 +997,11 @@
             "op_id": payload.op_id,
             "status": "success"
         }));
+
+        let op = ops[payload.op_id];
+        op.status = "success";
+        op.endTime = Date.now();
+        ops[payload.op_id] = op;
     }
 
     function emit_error(payload, error) {
@@ -965,6 +1017,11 @@
             "op_id": payload.op_id,
             "status": "failure"
         }));
+
+        let op = ops[payload.op_id];
+        op.status = "failure";
+        op.endTime = Date.now();
+        ops[payload.op_id] = op;
     }
 
     function getRandom(x, size) {
