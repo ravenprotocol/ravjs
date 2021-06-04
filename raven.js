@@ -78,7 +78,7 @@
                      op.endTime = Date.now();
                      ops[key] = ops;
 
-                     emit_error(op.data, "OpTimeout error")
+                     emit_error(op.data, {message: "OpTimeout error"})
                  }
             }
 
@@ -300,7 +300,7 @@
                 try {
                     x = tf.tensor(payload.values[0]);
                     if (x.shape.length !== 1)
-                        emit_error(payload, "Invalid Input");
+                        emit_error(payload, {message: "Invalid Input"});
                     result = tf.reverse(tf.topk(x, x.shape[0]).values).arraySync();
                     emit_result(payload, result);
                 } catch (error) {
@@ -332,7 +332,7 @@
                         result.forEach(a => finaL_result.push(a.arraySync()));
                         emit_result(payload, finaL_result);
                     } else {
-                        emit_error(payload, "Parameter 'numOrSizeSplits' is missing");
+                        emit_error(payload, {message: "Parameter 'numOrSizeSplits' is missing"});
                         return;
                     }
                 } catch (error) {
@@ -348,7 +348,7 @@
                         result = x.reshape(shape).arraySync();
                         emit_result(payload, result);
                     } else {
-                        emit_error(payload, "Parameter 'shape' is missing");
+                        emit_error(payload, {message: "Parameter 'shape' is missing"});
                     }
                 } catch (error) {
                     emit_error(payload, error);
@@ -874,7 +874,7 @@
                         let result = tf.bincount(condition, a.arraySync(), b.arraySync());
                         emit_result(payload, result);
                     } else {
-                        emit_error(payload, "Parameter 'condition' is missing");
+                        emit_error(payload, {message: "Parameter 'condition' is missing" });
                     }
                 } catch (error) {
                     emit_error(payload, error);
@@ -915,7 +915,7 @@
                             }
                         });
                     } else {
-                        emit_error(payload, "Parameter 'operation' is missing");
+                        emit_error(payload, {message: "Parameter 'operation' is missing"});
                     }
 
                 } catch (error) {
@@ -931,7 +931,7 @@
                         result = tf.oneHot(x, depth).arraySync();
                         emit_result(payload, result);
                     } else {
-                        emit_result(payload, "Parameter 'depth' is missing");
+                        emit_result(payload, {message: "Parameter 'depth' is missing"});
                     }
                 } catch (error) {
                     emit_error(payload, error);
