@@ -871,7 +871,7 @@
                     let params = payload.params;
                     if ('condition' in params) {
                         let condition = params.condition;
-                        let result = a.where(condition, b);
+                        let result = a.where(condition, b).arraySync();
                         emit_result(payload, result);
                     } else {
                         emit_error(payload, {message: "Parameter 'condition' is missing" });
