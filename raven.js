@@ -867,7 +867,7 @@
             case "where":
                 try {
                     let a = tf.tensor(payload.values[0]);
-                    let b = tf.tensor(payload.values[0]);
+                    let b = tf.tensor(payload.values[1]);
                     let params = payload.params;
                     if ('condition' in params) {
                         let condition = params.condition;
