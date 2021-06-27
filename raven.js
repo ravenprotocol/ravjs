@@ -883,7 +883,7 @@
             case "sign":
                 try {
                     x = tf.tensor(payload.values[0]);
-                    result = tf.sign(x.arraySync());
+                    result = tf.sign(x).arraysync();
                     emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
