@@ -4,7 +4,8 @@
     const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':9999/ravjs';
     let socket = io(socket_server_url, {
         query: {
-            "client_name": "ravjs"
+            "type": "ravjs",
+            "cid":"8116"
         }
     });
 
@@ -15,8 +16,8 @@
 
     socket.on('op', function (d) {
         $(".clientStatus").append("Op received");
-        let data = JSON.parse(d);
-
+        //let data = JSON.parse(d);
+        let data= d;
         ops[data.op_id] = {id: data.op_id, status: 'pending', startTime: Date.now(), endTime: null, data: data};
 
         //Acknowledge op
@@ -102,6 +103,7 @@
 
     function compute(payload) {
         console.log("Computing " + payload.operator);
+        console.log(payload);
         switch (payload.operator) {
             case "linear":
                 try {
@@ -290,8 +292,10 @@
                         result = x.sum(axis).arraySync();
                     } else {
                         result = x.sum().arraySync();
+
                     }
-                    emit_result(payload, result)
+                    console.log(result);
+                    emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
                 }
@@ -883,7 +887,7 @@
             case "sign":
                 try {
                     x = tf.tensor(payload.values[0]);
-                    result = tf.sign(x.arraySync());
+                    result = tf.sign(x).arraysync();
                     emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
