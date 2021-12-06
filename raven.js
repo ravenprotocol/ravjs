@@ -941,8 +941,32 @@
                     emit_error(payload, error);
                 }
                 break;
+            case "set_value":
+                try {
+                    let arr = payload.values[0];
+                    let params = payload.params;
+                    let index = params.index;
+                    let value = params.value;
+                    let t = '';
+                    for(let i=0;i<index.length;i++){
+                        t = t.concat('[%s]'.format(index[i]));
+                    }
+                    query = 'arr';
+                    query = query.concat(t);
+                    query = query.concat('=%s'.format(value));
+                    p = eval(query);    
+                    emit_result(payload, arr);
+                } catch (error) {
+                    emit_error(payload, error);
+                }
+                break;
         }
     }
+    
+    String.prototype.format = function() {
+      return [...arguments].reduce((p,c) => p.replace(/%s/,c), this);
+    };
+    
 
     /**
      * To find indices of values in a particular array
