@@ -1,57 +1,62 @@
 (function () {
+    
+    /*
+    1. Connect
+    2. Receive benchmark graph
+    3. Share benchmark results
+    4. Wait for compute graph
+    5. Receive compute graph
+    6. Perform and share results back with the platform
+    */
+
     const RAVSOCK_SERVER_URL = "0.0.0.0";
     //const RAVSOCK_SERVER_URL = "host.docker.internal";
-    const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':9999/ravjs';
+    const RAVSOCK_SERVER_PORT = "9999";
+    const CLIENT_TYPE = "ravjs";
+    const CID = "8888";
+    const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/' + CLIENT_TYPE;
+
+
+    // Create socket and try to connect
     let socket = io(socket_server_url, {
         query: {
-            "type": "ravjs",
-            "cid":"8116"
+            "type": CLIENT_TYPE,
+            "cid": CID
         }
     });
 
+    // Hyperparamters
     let timeoutId = null;
     let ops = {};
     const opTimeout = 6000;
     const initialTimeout = 1000;
 
-    socket.on('op', function (d) {
-        $(".clientStatus").append("Op received");
-        //let data = JSON.parse(d);
-        let data= d;
-        ops[data.op_id] = {id: data.op_id, status: 'pending', startTime: Date.now(), endTime: null, data: data};
+    // // SOCKETIO - Receive benchmark graph and return results
+    // socket.on("benchmark", function (b) {
+    //     console.log("Received benchmark");
+    //     console.log(b);
 
-        //Acknowledge op
-        socket.emit("acknowledge", JSON.stringify({
-            "op_id": data.op_id,
-            "message": "Op received"
-        }));
+    //     // Send benchmark results
+    //     socket.emit("benchmark_callback", JSON.stringify({
+    //         "client_power": 5
+    //     }));
+    // });
 
-        // Perform
-        let operation_type = data ["op_type"];
-        let operator = data ["operator"];
-        if (operation_type && operator) {
-            compute(data);
-        }
-
-        stopTimer();
-        timeoutId = setTimeout(waitInterval(), opTimeout);
-    });
-
+    // On connection started
     socket.on('connect', function (d) {
         console.log("Connected");
 
-        $(".clientStatus").html("Connected");
+        // Gets the benchmark json data from the platform
+        fetch('http://localhost:9999/ravenjs/get/benchmark/').then(r=>r.json()).then(r=>console.log(r));
 
-        socket.emit("get_op", JSON.stringify({
-            "message": "Send me an aop"
-        }))
     });
 
+    // On connection closed
     socket.on('disconnect', function (d) {
         console.log("Disconnected");
-        $(".clientStatus").html("Disconnected");
     });
 
+    // To check if this client is still connected or not
     socket.on("ping", function (message) {
         console.log(message);
         console.log("Received PING");
@@ -62,45 +67,8 @@
         }));
     });
 
-    function waitInterval() {
-        console.log("Time started");
-        return function() {
-            console.log("Function called");
-            for (const key in ops) {
-                let op = ops[key];
-                if (op.status === "pending" || Date.now() - op.startTime < opTimeout) {
-                    stopTimer();
-                    timeoutId = setTimeout(waitInterval(), opTimeout);
-                    return
-                }
 
-                 if (op.status === "pending" && Date.now() - op.startTime > opTimeout) {
-                     op.status = "failure";
-                     op.endTime = Date.now();
-                     ops[key] = ops;
-
-                     emit_error(op.data, {message: "OpTimeout error"})
-                 }
-            }
-
-            socket.emit("get_op", JSON.stringify({
-                "message": "Send me an aop"
-            }));
-
-            stopTimer();
-            timeoutId = setTimeout(waitInterval(), opTimeout);
-        }
-    }
-
-    function stopTimer(){
-        console.log("Timer stopped");
-        if (timeoutId !== null) {
-            clearTimeout(timeoutId);
-        }
-    }
-
-    timeoutId = setTimeout(waitInterval(), initialTimeout);
-
+    // Receive payload
     function compute(payload) {
         console.log("Computing " + payload.operator);
         console.log(payload);
@@ -967,6 +935,70 @@
       return [...arguments].reduce((p,c) => p.replace(/%s/,c), this);
     };
     
+
+    socket.on('op', function (d) {
+        $(".clientStatus").append("Op received");
+        //let data = JSON.parse(d);
+        let data= d;
+        ops[data.op_id] = {id: data.op_id, status: 'pending', startTime: Date.now(), endTime: null, data: data};
+
+        //Acknowledge op
+        socket.emit("acknowledge", JSON.stringify({
+            "op_id": data.op_id,
+            "message": "Op received"
+        }));
+
+        // Perform
+        let operation_type = data ["op_type"];
+        let operator = data ["operator"];
+        if (operation_type && operator) {
+            compute(data);
+        }
+
+        stopTimer();
+        timeoutId = setTimeout(waitInterval(), opTimeout);
+    });
+
+
+    function waitInterval() {
+        console.log("Time started");
+        return function() {
+            console.log("Function called");
+            for (const key in ops) {
+                let op = ops[key];
+                if (op.status === "pending" || Date.now() - op.startTime < opTimeout) {
+                    stopTimer();
+                    timeoutId = setTimeout(waitInterval(), opTimeout);
+                    return
+                }
+
+                 if (op.status === "pending" && Date.now() - op.startTime > opTimeout) {
+                     op.status = "failure";
+                     op.endTime = Date.now();
+                     ops[key] = ops;
+
+                     emit_error(op.data, {message: "OpTimeout error"})
+                 }
+            }
+
+            socket.emit("get_op", JSON.stringify({
+                "message": "Send me an aop"
+            }));
+
+            stopTimer();
+            timeoutId = setTimeout(waitInterval(), opTimeout);
+        }
+    }
+
+    function stopTimer(){
+        console.log("Timer stopped");
+        if (timeoutId !== null) {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    timeoutId = setTimeout(waitInterval(), initialTimeout);
+
 
     /**
      * To find indices of values in a particular array
