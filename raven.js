@@ -31,7 +31,7 @@
     const opTimeout = 6000;
     const initialTimeout = 1000;
 
-    // // SOCKETIO - Receive benchmark graph and return results
+    // // Receive benchmark graph and return results
     // socket.on("benchmark", function (b) {
     //     console.log("Received benchmark");
     //     console.log(b);
@@ -46,8 +46,13 @@
     socket.on('connect', function (d) {
         console.log("Connected");
 
-        // Gets the benchmark json data from the platform
         fetch('http://localhost:9999/ravenjs/get/benchmark/').then(r=>r.json()).then(r=>console.log(r));
+
+        // Send benchmark results
+        console.log('Emitting Benchmark Results');
+        socket.emit("benchmark_callback", JSON.stringify({
+            "client_power": 5
+        }));
 
     });
 
