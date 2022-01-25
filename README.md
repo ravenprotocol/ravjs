@@ -1,7 +1,7 @@
 # ravjs
 Raven Distribution Framework's Javascript Library
 
-Set RAVSOCK_SERVER_URL to your server url in the raven.js file
+Set RAVSOCK_SERVER_URL to your server url in the raven-old.js file
 
 Requirements
 1. Docker
@@ -18,7 +18,7 @@ https://github.com/SeleniumHQ/docker-selenium
 
     sh create_local_cluster.sh 5   # Specify the number of workers to create
     
-Note: change RAVSOCK_SERVER_URL to "host.docker.internal" in the raven.js file 
+Note: change RAVSOCK_SERVER_URL to "host.docker.internal" in the raven-old.js file 
 
 
 ## Manually
