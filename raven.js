@@ -13,9 +13,8 @@
     //const RAVSOCK_SERVER_URL = "host.docker.internal";
     const RAVSOCK_SERVER_PORT = "9999";
     const CLIENT_TYPE = "client";
-    const CID = "3";
+    const CID = "4";
     const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/' + CLIENT_TYPE;
-
 
     // Create socket and try to connect
     let socket = io(socket_server_url, {
@@ -35,6 +34,9 @@
     socket.on('connect', function (d) {
         console.log("Connected");
 
+        // Update the status to connected
+        $("#client_status").text("Connected");
+
         fetch('http://localhost:9999/ravenjs/get/benchmark2/').then(r=>r.json()).then(r=>{
             console.log(r);
             benchmark_results = {};
@@ -51,12 +53,12 @@
             console.log('Emitting Benchmark Results');
             socket.emit("benchmark_callback", JSON.stringify(benchmark_results));
         });
-
     });
 
     // On connection closed
     socket.on("disconnect", function (d) {
         console.log("Disconnected");
+        $("#client_status").text("Disconnected");
     });
 
     // Check if the client is connected
