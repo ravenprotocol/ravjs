@@ -55,8 +55,13 @@
     });
 
     // On connection closed
-    socket.on('disconnect', function (d) {
+    socket.on("disconnect", function (d) {
         console.log("Disconnected");
+    });
+
+    // Check if the client is connected
+    socket.on("check_status", function (d) {
+        socket.emit("check_callback", d);
     });
 
     // To check if this client is still connected or not
