@@ -1,28 +1,36 @@
 (function () {
 
-       /*
-    1. Connect
-    2. Receive benchmark graph
-    3. Share benchmark results
-    4. Wait for compute graph
-    5. Receive compute graph
-    6. Perform and share results back with the platform
-    */
-
-    const RAVSOCK_SERVER_URL = "0.0.0.0";
+    /*
+ 1. Connect
+ 2. Receive benchmark graph
+ 3. Share benchmark results
+ 4. Wait for compute graph
+ 5. Receive compute graph
+ 6. Perform and share results back with the platform
+ */
+    const RAVSOCK_SERVER_URL = "localhost";
     //const RAVSOCK_SERVER_URL = "host.docker.internal";
     const RAVSOCK_SERVER_PORT = "9999";
     const CLIENT_TYPE = "client";
     const CID = "4";
     const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/' + CLIENT_TYPE;
+    let socket = null;
+    let graphs = null;
 
     // Create socket and try to connect
-    let socket = io(socket_server_url, {
+    //socket = io();
+
+    socket = io(socket_server_url, {
         query: {
             "type": CLIENT_TYPE,
             "cid": CID
         }
     });
+
+    function disconnect() {
+        socket.disconnect();
+        socket = null;
+    }
 
     // Hyperparamters
     let timeoutId = null;
@@ -36,11 +44,46 @@
 
         // Update the status to connected
         $("#client_status").text("Connected");
+        $("#client_status").css("color", "green");
 
-        fetch('http://localhost:9999/ravenjs/get/benchmark2/').then(r=>r.json()).then(r=>{
+        fetch('http://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/graph/get/all/?approach=federated').then(r => r.json()).then(r => {
+            console.log("Graphs:", r);
+            graphs = r;
+            $("#spinnerGraphs").fadeOut();
+
+            for(let i=0;i<r.length;i++){
+                let graph_data = r[i];
+                console.log(r[i]);
+                $("#graphs tbody").append("<tr><td>"+graph_data.id+"</td><td>"+graph_data.name+"</td><td>"+graph_data.algorithm+"</td><td>"+graph_data.approach+"</td><td>"+graph_data.rules+"</td><td><button type='button'" +
+                    " class='btn btn-outline-success openButton' data-id='"+r[i].id+"'>Participate</button></td></tr>");
+            }
+            $("#graphs").fadeIn();
+        });
+    });
+
+    $(document).on("click", ".openButton", function () {
+         $("#enterValuesModal").modal('toggle');
+         $("#submitValuesButton").data("graph_id", $(this).data("id"));
+    });
+
+    $("#submitValuesButton").on("click", function () {
+        let graph_id = $(this).data("graph_id");
+        let values = $("#inputValues").val();
+
+        console.log(values);
+
+        // Check if this value meets its requirements
+
+    });
+
+    $("#participateButton").click(function () {
+        fetch('http://localhost:9999/ravenjs/get/benchmark/', {
+            method: "GET",
+            headers: {"Content-type": "application/json", 'mode':"opaque"}
+        }).then(r => r.json()).then(r => {
             console.log(r);
             benchmark_results = {};
-            for(op in r){
+            for (op in r) {
                 t1 = performance.now();
                 computeforbm(r[op]);
                 t2 = performance.now();
@@ -52,6 +95,9 @@
             // Send benchmark results
             console.log('Emitting Benchmark Results');
             socket.emit("benchmark_callback", JSON.stringify(benchmark_results));
+
+            // Start timer
+            setTimeout(waitInterval(), initialTimeout);
         });
     });
 
@@ -59,6 +105,7 @@
     socket.on("disconnect", function (d) {
         console.log("Disconnected");
         $("#client_status").text("Disconnected");
+        $("#client_status").css("color", "red");
     });
 
     // Check if the client is connected
@@ -77,7 +124,6 @@
         }));
     });
 
-
     // Receive payload
     function compute(payload) {
         console.log("Computing " + payload.operator);
@@ -85,18 +131,18 @@
 
         let values = [];
         for (let i = 0; i < payload.values.length; i++) {
-            if (payload.values[i].value !== undefined){
+            if (payload.values[i].value !== undefined) {
                 console.log("From server");
                 values.push(payload.values[i].value);
             }
-            if(payload.values[i].op_id !== undefined){
+            if (payload.values[i].op_id !== undefined) {
                 console.log("From client");
                 values.push(outputs[payload.values[i].op_id]);
             }
         }
         payload.values = values;
 
-        console.log("Payload Values: ",payload.values);
+        console.log("Payload Values: ", payload.values);
 
         switch (payload.operator) {
             case "linear":
@@ -872,7 +918,7 @@
                         let result = a.where(condition, b).arraySync();
                         emit_result(payload, result);
                     } else {
-                        emit_error(payload, {message: "Parameter 'condition' is missing" });
+                        emit_error(payload, {message: "Parameter 'condition' is missing"});
                     }
                 } catch (error) {
                     emit_error(payload, error);
@@ -942,7 +988,7 @@
                     let index = params.index;
                     let value = params.value;
                     let t = '';
-                    for(let i=0;i<index.length;i++){
+                    for (let i = 0; i < index.length; i++) {
                         t = t.concat('[%s]'.format(index[i]));
                     }
                     query = 'arr';
@@ -955,7 +1001,7 @@
                 }
                 break;
             case "zeros_like":
-                try{
+                try {
                     x = tf.tensor(payload.values[0]);
                     result = tf.zerosLike(x).arraySync();
                     emit_result(payload, result);
@@ -964,7 +1010,7 @@
                 }
                 break;
             case "test_qr":
-                try{
+                try {
                     console.log("Paaaayyyyyyylllooaaad : ", payload.values[0]);
                     const a = tf.tensor2d([[1, 2], [3, 4]]);
                     let [q, r] = tf.linalg.qr(a);
@@ -978,8 +1024,8 @@
         }
     }
 
-    String.prototype.format = function() {
-      return [...arguments].reduce((p,c) => p.replace(/%s/,c), this);
+    String.prototype.format = function () {
+        return [...arguments].reduce((p, c) => p.replace(/%s/, c), this);
     };
 
     function computeforbm(payload) {
@@ -1166,7 +1212,7 @@
                 break;
             case "matrix_sum":
                 try {
-                    q1=performance.now()
+                    q1 = performance.now()
                     x = tf.tensor(payload.values[0]);
                     let params = payload.params;
                     if ('axis' in params) {
@@ -1176,7 +1222,7 @@
                         result = x.sum().arraySync();
 
                     }
-                    console.log(performance.now()-q1)
+                    console.log(performance.now() - q1)
                     console.log(result);
 
 
@@ -1762,7 +1808,7 @@
                         let result = a.where(condition, b).arraySync();
                         //emit_result(payload, result);
                     } else {
-                        emit_error(payload, {message: "Parameter 'condition' is missing" });
+                        emit_error(payload, {message: "Parameter 'condition' is missing"});
                     }
                 } catch (error) {
                     emit_error(payload, error);
@@ -1799,7 +1845,7 @@
 
                             // TODO: fix the logic
                             if (outputs.length === x.size) {
-                               // emit_result(payload, outputs);
+                                // emit_result(payload, outputs);
                             }
                         });
                     } else {
@@ -1832,7 +1878,7 @@
                     let index = params.index;
                     let value = params.value;
                     let t = '';
-                    for(let i=0;i<index.length;i++){
+                    for (let i = 0; i < index.length; i++) {
                         t = t.concat('[%s]'.format(index[i]));
                     }
                     query = 'arr';
@@ -1846,8 +1892,6 @@
                 break;
 
 
-
-
         }
     }
 
@@ -1856,9 +1900,15 @@
     socket.on('subgraph', function (d) {
         console.log("Subgraph Received...");
         console.log(d);
-        let data= d;
-        for(index in data){
-            ops[data[index].op_id] = {id: data[index].op_id, status: 'pending', startTime: Date.now(), endTime: null, data: data[index]};
+        let data = d;
+        for (index in data) {
+            ops[data[index].op_id] = {
+                id: data[index].op_id,
+                status: 'pending',
+                startTime: Date.now(),
+                endTime: null,
+                data: data[index]
+            };
 
             //Acknowledge op
             socket.emit("acknowledge", JSON.stringify({
@@ -1880,7 +1930,7 @@
 
     function waitInterval() {
         console.log("Time started");
-        return function() {
+        return function () {
             console.log("Function called");
             for (const key in ops) {
                 let op = ops[key];
@@ -1890,13 +1940,13 @@
                     return
                 }
 
-                 if (op.status === "pending" && Date.now() - op.startTime > opTimeout) {
-                     op.status = "failure";
-                     op.endTime = Date.now();
-                     ops[key] = ops;
+                if (op.status === "pending" && Date.now() - op.startTime > opTimeout) {
+                    op.status = "failure";
+                    op.endTime = Date.now();
+                    ops[key] = ops;
 
-                     emit_error(op.data, {message: "OpTimeout error"})
-                 }
+                    emit_error(op.data, {message: "OpTimeout error"})
+                }
             }
 
             socket.emit("get_op", JSON.stringify({
@@ -1908,14 +1958,14 @@
         }
     }
 
-    function stopTimer(){
+    function stopTimer() {
         console.log("Timer stopped");
         if (timeoutId !== null) {
             clearTimeout(timeoutId);
         }
     }
 
-    timeoutId = setTimeout(waitInterval(), initialTimeout);
+    //timeoutId = setTimeout(waitInterval(), initialTimeout);
 
 
     /**
