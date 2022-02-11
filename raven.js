@@ -46,19 +46,19 @@
         $("#client_status").text("Connected");
         $("#client_status").css("color", "green");
 
-        fetch('http://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/graph/get/all/?approach=federated').then(r => r.json()).then(r => {
-            console.log("Graphs:", r);
-            graphs = r;
-            $("#spinnerGraphs").fadeOut();
-
-            for(let i=0;i<r.length;i++){
-                let graph_data = r[i];
-                console.log(r[i]);
-                $("#graphs tbody").append("<tr><td>"+graph_data.id+"</td><td>"+graph_data.name+"</td><td>"+graph_data.algorithm+"</td><td>"+graph_data.approach+"</td><td>"+graph_data.rules+"</td><td><button type='button'" +
-                    " class='btn btn-outline-success openButton' data-id='"+r[i].id+"'>Participate</button></td></tr>");
-            }
-            $("#graphs").fadeIn();
-        });
+        // fetch('http://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/graph/get/all/?approach=federated').then(r => r.json()).then(r => {
+        //     console.log("Graphs:", r);
+        //     graphs = r;
+        //     $("#spinnerGraphs").fadeOut();
+        //
+        //     for(let i=0;i<r.length;i++){
+        //         let graph_data = r[i];
+        //         console.log(r[i]);
+        //         $("#graphs tbody").append("<tr><td>"+graph_data.id+"</td><td>"+graph_data.name+"</td><td>"+graph_data.algorithm+"</td><td>"+graph_data.approach+"</td><td>"+graph_data.rules+"</td><td><button type='button'" +
+        //             " class='btn btn-outline-success openButton' data-id='"+r[i].id+"'>Participate</button></td></tr>");
+        //     }
+        //     $("#graphs").fadeIn();
+        // });
     });
 
     $(document).on("click", ".openButton", function () {
