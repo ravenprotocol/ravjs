@@ -12,7 +12,7 @@
     //const RAVSOCK_SERVER_URL = "host.docker.internal";
     const RAVSOCK_SERVER_PORT = "9999";
     const CLIENT_TYPE = "client";
-    const CID = "4";
+    const CID = "1";
     const socket_server_url = 'ws://' + RAVSOCK_SERVER_URL + ':' + RAVSOCK_SERVER_PORT + '/' + CLIENT_TYPE;
     let socket = null;
     let graphs = null;
@@ -1041,8 +1041,8 @@
                 break;
             case "addition":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.add(y).arraySync();
 
                 } catch (error) {
@@ -1051,8 +1051,8 @@
                 break;
             case "subtraction":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.sub(y).arraySync();
 
                 } catch (error) {
@@ -1061,8 +1061,8 @@
                 break;
             case "multiplication":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.mul(y).arraySync();
 
                 } catch (error) {
@@ -1072,8 +1072,8 @@
                 break;
             case "division":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.div(y).arraySync();
 
                 } catch (error) {
@@ -1082,7 +1082,7 @@
                 break;
             case "positive":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = +(x.arraySync());
 
                 } catch (error) {
@@ -1091,7 +1091,7 @@
                 break;
             case "negation":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.neg().arraySync();
 
                 } catch (error) {
@@ -1100,7 +1100,7 @@
                 break;
             case "exponential":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.exp().arraySync();
 
                 } catch (error) {
@@ -1109,7 +1109,7 @@
                 break;
             case "natural_log":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.log().arraySync();
 
                 } catch (error) {
@@ -1118,8 +1118,8 @@
                 break;
             case "power":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.pow(y).arraySync();
 
                 } catch (error) {
@@ -1128,7 +1128,7 @@
                 break;
             case "square":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.square().arraySync();
 
                 } catch (error) {
@@ -1137,7 +1137,7 @@
                 break;
             case "cube":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.mul(x).mul(x).arraySync();
 
                 } catch (error) {
@@ -1146,7 +1146,7 @@
                 break;
             case "square_root":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.sqrt().arraySync();
 
                 } catch (error) {
@@ -1155,7 +1155,7 @@
                 break;
             case "cube_root":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.pow(1.0 / 3.0).arraySync();
 
                 } catch (error) {
@@ -1164,7 +1164,7 @@
                 break;
             case "absolute":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.abs().arraySync();
 
                 } catch (error) {
@@ -1173,8 +1173,8 @@
                 break;
             case "matrix_multiplication":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.matMul(y).arraySync();
 
                 } catch (error) {
@@ -1183,8 +1183,8 @@
                 break;
             case "multiply":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.mul(y).arraySync();
 
                 } catch (error) {
@@ -1193,8 +1193,8 @@
                 break;
             case "dot":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.dot(y).arraySync();
 
                 } catch (error) {
@@ -1203,7 +1203,7 @@
                 break;
             case "transpose":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.transpose().arraySync();
 
                 } catch (error) {
@@ -1213,7 +1213,7 @@
             case "matrix_sum":
                 try {
                     q1 = performance.now()
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1232,7 +1232,7 @@
                 break;
             case "sort":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     if (x.shape.length !== 1)
                         emit_error(payload, {message: "Invalid Input"});
                     result = tf.reverse(tf.topk(x, x.shape[0]).values).arraySync();
@@ -1243,7 +1243,7 @@
                 break;
             case "split":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     let numOrSizeSplits = null;
                     let axis = null;
@@ -1275,7 +1275,7 @@
                 break;
             case "reshape":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('shape' in params) {
                         let shape = params.shape;
@@ -1290,7 +1290,7 @@
                 break;
             case "concatenate":
                 try {
-                    let values = payload.values;
+                    let values = payload.values[0].value;
                     let tensors = [];
                     for (let i = 0; i < values.length; i++) {
                         tensors.push(tf.tensor(values[i]));
@@ -1315,7 +1315,7 @@
                 break;
             case "min":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.min().arraySync();
                     //emit_result(payload, result)
                 } catch (error) {
@@ -1324,7 +1324,7 @@
                 break;
             case "max":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.max().arraySync();
                     //emit_result(payload, result)
                 } catch (error) {
@@ -1333,7 +1333,7 @@
                 break;
             case "unique":
                 try {
-                    let x = tf.tensor(payload.values[0]);
+                    let x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1349,7 +1349,7 @@
                 break;
             case "argmax":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1364,7 +1364,7 @@
                 break;
             case "argmin":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1379,7 +1379,7 @@
                 break;
             case "expand_dims":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1394,7 +1394,7 @@
                 break;
             case "inv":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = math.inv(x.arraySync());
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1403,8 +1403,8 @@
                 break;
             case "gather":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    indices = payload.values[1];
+                    x = tf.tensor(payload.values[0].value);
+                    indices = payload.values[1].value;
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1419,7 +1419,7 @@
                 break;
             case "reverse":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1452,7 +1452,7 @@
                 break;
             case "tile":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('reps' in params) {
                         let reps = params.reps;
@@ -1467,7 +1467,7 @@
                 break;
             case "slice":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('begin' in params) {
                         let begin = params.begin;
@@ -1487,8 +1487,8 @@
                 break;
             case "find_indices":
                 try {
-                    x = payload.values[0];
-                    values = payload.values[1];
+                    x = payload.values[0].value;
+                    values = payload.values[1].value;
                     result = tf.findIndices(x, values);
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1497,7 +1497,7 @@
                 break;
             case "shape":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = x.shape;
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1506,8 +1506,8 @@
                 break;
             case "greater":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.greater(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1516,8 +1516,8 @@
                 break;
             case "greater_equal":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.greaterEqual(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1526,8 +1526,8 @@
                 break;
             case "less":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.less(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1536,8 +1536,8 @@
                 break;
             case "less_equal":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.lessEqual(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1546,8 +1546,8 @@
                 break;
             case "equal":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.equal(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1556,8 +1556,8 @@
                 break;
             case "not_equal":
                 try {
-                    x = tf.tensor(payload.values[0]);
-                    y = tf.tensor(payload.values[1]);
+                    x = tf.tensor(payload.values[0].value);
+                    y = tf.tensor(payload.values[1].value);
                     result = x.notEqual(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1566,8 +1566,8 @@
                 break;
             case "logical_and":
                 try {
-                    x = tf.tensor(payload.values[0], undefined, 'bool');
-                    y = tf.tensor(payload.values[1], undefined, 'bool');
+                    x = tf.tensor(payload.values[0].value, undefined, 'bool');
+                    y = tf.tensor(payload.values[1].value, undefined, 'bool');
                     result = x.logicalAnd(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1576,8 +1576,8 @@
                 break;
             case "logical_or":
                 try {
-                    x = tf.tensor(payload.values[0], undefined, 'bool');
-                    y = tf.tensor(payload.values[1], undefined, 'bool');
+                    x = tf.tensor(payload.values[0].value, undefined, 'bool');
+                    y = tf.tensor(payload.values[1].value, undefined, 'bool');
                     result = x.logicalOr(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1586,7 +1586,7 @@
                 break;
             case "logical_not":
                 try {
-                    x = tf.tensor(payload.values[0], undefined, 'bool');
+                    x = tf.tensor(payload.values[0].value, undefined, 'bool');
                     result = x.logicalNot().arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1595,9 +1595,9 @@
                 break;
             case "logical_xor":
                 try {
-                    x = tf.tensor(payload.values[0], undefined, 'bool');
-                    y = tf.tensor(payload.values[1], undefined, 'bool');
-                    result = x.logicalXor().arraySync();
+                    x = tf.tensor(payload.values[0].value, undefined, 'bool');
+                    y = tf.tensor(payload.values[1].value, undefined, 'bool');
+                    result = x.logicalXor(y).arraySync();
                     //emit_result(payload, result);
                 } catch (error) {
                     emit_error(payload, error);
@@ -1605,7 +1605,7 @@
                 break;
             case "mean":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
@@ -1627,7 +1627,8 @@
                 break;
             case "average":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
+                    params = payload.params;
                     if ('axis' in params) {
                         let axis = params.axis;
                         result = x.mean(axis).arraySync();
@@ -1641,7 +1642,7 @@
                 break;
             case "mode":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     if (x.shape.length === 1) {
                         result = math.mode(x.arraySync());
                     } else if (x.shape.length === 2) {
@@ -1669,7 +1670,7 @@
                 break;
             case "median":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     if (x.shape.length === 1) {
                         result = math.median(x.arraySync());
                     } else if (x.shape.length === 2) {
@@ -1697,7 +1698,7 @@
                 break;
             case "variance":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     if (x.shape.length === 1) {
                         result = math.variance(x.arraySync());
                     } else if (x.shape.length === 2) {
@@ -1725,7 +1726,7 @@
                 break;
             case "standard_deviation":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     if (x.shape.length === 1) {
                         result = math.std(x.arraySync(), "uncorrected");
                     } else if (x.shape.length === 2) {
@@ -1753,7 +1754,7 @@
                 break;
             case "percentile":
                 try {
-                    let x = tf.tensor(payload.values[0]);
+                    let x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     if ('value' in params) {
                         let value = params.value;
@@ -1768,7 +1769,7 @@
                 break;
             case "random":
                 try {
-                    let x = payload.values[0];
+                    let x = payload.values[0].value;
                     let params = payload.params;
                     if ('size' in params) {
                         size = params.size;
@@ -1784,7 +1785,7 @@
 
             case "bincount":
                 try {
-                    let x = tf.tensor(payload.values[0]);
+                    let x = tf.tensor(payload.values[0].value);
                     let params = payload.params;
                     let weights = params.weights;
                     let minlength = params.minlength;
@@ -1800,8 +1801,8 @@
                 break;
             case "where":
                 try {
-                    let a = tf.tensor(payload.values[0]);
-                    let b = tf.tensor(payload.values[1]);
+                    let a = tf.tensor(payload.values[0].value);
+                    let b = tf.tensor(payload.values[1].value);
                     let params = payload.params;
                     if ('condition' in params) {
                         let condition = params.condition;
@@ -1816,7 +1817,7 @@
                 break;
             case "sign":
                 try {
-                    x = tf.tensor(payload.values[0]);
+                    x = tf.tensor(payload.values[0].value);
                     result = tf.sign(x).arraysync();
                     //emit_result(payload, result);
                 } catch (error) {
@@ -1825,7 +1826,7 @@
                 break;
             case "foreach":
                 try {
-                    x = tf.data.array(payload.values[0]);
+                    x = tf.data.array(payload.values[0].value);
                     let params = payload.params;
                     if ('operation' in params) {
                         let operation = params.operation;
@@ -1858,7 +1859,7 @@
                 break;
             case "one_hot_encoding":
                 try {
-                    x = tf.tensor(payload.values[0], null, 'int32');
+                    x = tf.tensor(payload.values[0].value, null, 'int32');
                     let params = payload.params;
                     if ('depth' in params) {
                         depth = params.depth;
@@ -1873,7 +1874,7 @@
                 break;
             case "set_value":
                 try {
-                    let arr = payload.values[0];
+                    let arr = payload.values[0].value;
                     let params = payload.params;
                     let index = params.index;
                     let value = params.value;
