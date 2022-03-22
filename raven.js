@@ -180,7 +180,7 @@
                     emit_result(payload, result);
                 } catch (error) {
                     result = error.message;
-                    emit_error(payload, result);
+                    emit_error(payload, error);
                 }
                 break;
             case "division":
@@ -1924,9 +1924,14 @@
                 compute(data[index]);
             }
 
-            stopTimer();
-            timeoutId = setTimeout(waitInterval(), opTimeout);
+            // stopTimer();
+            // timeoutId = setTimeout(waitInterval(), opTimeout);
+            
         }
+
+        stopTimer();
+        timeoutId = setTimeout(waitInterval(), opTimeout);
+
     });
 
     function waitInterval() {
