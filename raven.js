@@ -8,8 +8,9 @@
  5. Receive compute graph
  6. Perform and share results back with the platform
  */
-    const RAVSOCK_SERVER_URL = "localhost";
+    //const RAVSOCK_SERVER_URL = "localhost";
     //const RAVSOCK_SERVER_URL = "host.docker.internal";
+    const RAVSOCK_SERVER_URL = location.hostname;
     const RAVSOCK_SERVER_PORT = "9999";
     const CLIENT_TYPE = "client";
     const CID = "1";
