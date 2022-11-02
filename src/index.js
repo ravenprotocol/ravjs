@@ -1,12 +1,11 @@
-const {tfjs, mathjs, io, SEAL, jsftp} = require("./imports")
-const {compute} = require("./compute")
-let {TOKEN} = require('./config');
-const {benchmark} = require('./benchmark')
-const {getSocket, initializeHandlers} = require("./connect");
+
+import {compute} from "./compute.js"
+import {benchmark} from './benchmark.js'
+import {getSocket, initializeHandlers} from "./connect.js"
 
 function initialize(token){
-    TOKEN = token
-    socket = getSocket(token);
+
+    let socket = getSocket(token);
     initializeHandlers(socket);
     socket.connect();
     console.log("socket:", socket);
@@ -16,17 +15,4 @@ function initialize(token){
     return socket
 }
 
-/**
- * Third party libraries functions
- */
-window.mathjs = mathjs;
-window.socket_io = io;
-window.tfjs = tfjs;
-window.node_seal = SEAL;
-window.jsftp = jsftp;
-
-/**
- * Ravjs functions
- */
-window.initialize = initialize
-window.compute = compute
+initialize('')

@@ -1,9 +1,10 @@
-const {io} = require("socket.io-client");
-const {RAVENVERSE_URL, CLIENT_TYPE, RECONNECTION_ATTEMPTS, RECONNECTION} = require('./config');
+import { io } from "socket.io-client";
+import { RAVENVERSE_URL, CLIENT_TYPE, RECONNECTION_ATTEMPTS, RECONNECTION } from './config.js';
 
 
 function getSocket(token) {
     return io(RAVENVERSE_URL, {
+        transports: ['websocket'],
         query: {
             "type": CLIENT_TYPE
         },
@@ -11,7 +12,7 @@ function getSocket(token) {
         reconnectionAttempts: RECONNECTION_ATTEMPTS,
         reconnection: RECONNECTION,
         reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
+        reconnectionDelayMax: 50000,
         auth: {
             "token": token
         }
@@ -31,12 +32,13 @@ function initializeHandlers(socket){
         console.log("reconnection attempted");
     });
 
-    socket.on("connect_error", () => {
-        socket.auth.token = "abcd";
+    socket.on("connect_error", (e) => {
+        console.log(e)
+        // socket.auth.token = "abcd";
         socket.connect();
         console.log("error")
     });
 }
 
 
-module.exports = {getSocket, initializeHandlers}
+export {getSocket, initializeHandlers}

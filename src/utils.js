@@ -19,4 +19,4 @@ function getRandom(x, size) {
     }
 }
 
-module.exports = {percentile, getRandom}
+export default {percentile, getRandom}

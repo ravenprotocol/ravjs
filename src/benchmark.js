@@ -1,7 +1,7 @@
-const {RAVENVERSE_HOST} = require("./config");
-const {performance} = require("./imports");
-const {compute} = require("./compute");
-const fetch = require('node-fetch')
+import { RAVENVERSE_HOST } from "./config.js";
+import {performance} from 'perf_hooks'
+import {compute} from "./compute.js";
+import fetch from 'node-fetch';
 
 function benchmark(socket) {
     console.log("Benchmark")
@@ -34,4 +34,4 @@ function benchmark(socket) {
 }
 
 
-module.exports = {benchmark}
+export {benchmark}

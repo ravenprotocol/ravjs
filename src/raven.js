@@ -1,4 +1,4 @@
-const {outputs, ops} = require('./config')
+import { outputs, ops } from './config';
 
 // Hyperparamters
 let timeoutId = null;
@@ -88,4 +88,4 @@ function stopTimer() {
 
 
 
-module.exports = {compute}
+export default {compute}

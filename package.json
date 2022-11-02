@@ -1,0 +1,31 @@
+{
+  "name": "ravjs",
+  "version": "1.0.0",
+  "description": "Javascript client library to retrieve and calculate operations",
+  "main": "config.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravenprotocol/ravjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ravenprotocol/ravjs/issues"
+  },
+  "homepage": "https://github.com/ravenprotocol/ravjs#readme",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.0.0",
+    "jsftp": "^2.1.3",
+    "mathjs": "^11.3.2",
+    "node-fetch": "^2.6.7",
+    "node-seal": "^5.0.1",
+    "socket.io-client": "^4.3.2"
+  }
+}

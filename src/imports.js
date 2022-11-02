@@ -1,10 +1,5 @@
-const mathjs = require("mathjs");
-const tfjs = require("@tensorflow/tfjs");
-const SEAL = require("node-seal");
-const jsftp = require("jsftp");
-const {io} = require('socket.io-client')
-const fetch = require("node-fetch")
-const {performance} = require("perf_hooks")
+import tfjs from '@tensorflow/tfjs';
+let { findIndices, sort } = tfjs;
 
 /**
  * To find indices of values in a particular array
@@ -12,7 +7,7 @@ const {performance} = require("perf_hooks")
  * @param values
  * @returns {{}}
  */
-tfjs.findIndices = function (x, values) {
+findIndices = function (x, values) {
     let indices = [];
     console.log("values:", values);
     for (let i = 0; i < values.length; i++) {
@@ -31,7 +26,7 @@ tfjs.findIndices = function (x, values) {
 /**
  * Sort an array
  */
-tfjs.sort = function (x) {
+sort = function (x) {
     x = tf.tensor(x);
     try {
         if (x.shape.length !== 1)
@@ -43,4 +38,4 @@ tfjs.sort = function (x) {
     }
 };
 
-module.exports = {mathjs, tfjs, SEAL, jsftp, io, fetch, performance}
+export  {tfjs}

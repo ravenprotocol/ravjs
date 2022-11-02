@@ -1,5 +1,5 @@
-const {tfjs, mathjs} = require('./imports')
-const {tfjs_functions, mathjs_functions} = require('./config')
+import {tfjs} from './imports.js';
+import { tfjs_functions, mathjs_functions } from './config.js';
 
 function compute(payload) {
     console.log(payload)
@@ -62,4 +62,4 @@ function a(payload, f, values) {
     }
 }
 
-module.exports = {compute}
+export {compute}

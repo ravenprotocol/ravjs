@@ -1,7 +1,7 @@
 /**
  * Configuration file
  */
-const RAVENVERSE_HOST = "0.0.0.0:9999";
+const RAVENVERSE_HOST = "server.ravenverse.ai";
 const CLIENT_TYPE = "client";
 const GET_GRAPHS_URL = 'http://' + RAVENVERSE_HOST + '/graph/get/all/';
 const RAVENVERSE_URL = 'ws://' + RAVENVERSE_HOST + '/' + CLIENT_TYPE;
@@ -14,7 +14,7 @@ let TOKEN=null
 const mathjs_functions = ['inv', 'mode', 'median', 'std', 'variance']
 const tfjs_functions = ['cube', 'foreach', 'find']
 
-module.exports = {
+export  {
     RAVENVERSE_HOST,
     CLIENT_TYPE,
     GET_GRAPHS_URL,
