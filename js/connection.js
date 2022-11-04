@@ -77,24 +77,4 @@ $(document).on('click', '#connectDisconnectButton', function () {
     }
 });
 
-function changeConnectDisconnectButton(status) {
-    if(status === "connected"){
-        bt.text("Disconnect");
-        bt.removeAttr("class");
-        bt.attr('class', '');
-        bt.addClass("btn btn-outline-danger");
-        bt.data('status', "connected");
-    }else if(status === "disconnected"){
-        bt.text("Connect");
-        bt.removeAttr("class");
-        bt.attr('class', '');
-        bt.addClass("btn btn-outline-primary");
-        bt.data('status', "disconnected");
-    }else if(status === "connecting"){
-        bt.text("Connecting...");
-        bt.removeAttr("class");
-        bt.attr('class', '');
-        bt.addClass("btn btn-outline-warning");
-        bt.data('status', "connecting");
-    }
-}
+

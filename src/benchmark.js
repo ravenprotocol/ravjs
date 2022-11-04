@@ -10,11 +10,11 @@ function benchmark(socket) {
     fetch("http://" + RAVENVERSE_HOST + '/ravenjs/get/benchmark/', {
         mode: "no-cors",
         method: "GET",
-        headers: {"Content-type": "application/json", 'mode': "opaque", 'token': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU2MzczMTMyLCJpYXQiOjE2NTYxNTcxMzIsImp0aSI6IjFmZjQ2YjczZDhjYjQ0YmM4YWFjOTU5ZTBjNjBhY2ExIiwidXNlcl9pZCI6IjAwMjY3MDgwNTgifQ.CW-YkAkcIdMaNthDq-BcjoGdq4TjOHaRC5u2U_N8A3M"}
+        headers: {"Content-type": "application/json", 'mode': "opaque", 'token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY4MzYwOTY4LCJpYXQiOjE2NjU3MzI5NjgsImp0aSI6IjExYTZjYzNlNTQ1MzQ1NDM5MmE4NzM1ZmZlMmVjOGQxIiwidXNlcl9pZCI6IjEwMDA0MTM3NzAifQ.XzaEhm_I8HHZsuKwwRx-_Ut_jXNqV6u1WR2RUU7Iw4Y"}
     }).then(r => r.json()).then(r => {
         console.log("Benchmarking ops received");
         let benchmark_results = {};
-        for (op in r) {
+        for (let op in r) {
             let t1 = performance.now();
             compute(r[op]);
             let t2 = performance.now();

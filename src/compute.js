@@ -1,4 +1,4 @@
-import {tfjs} from './imports.js';
+import * as tfjs from '@tensorflow/tfjs';
 import { tfjs_functions, mathjs_functions } from './config.js';
 
 function compute(payload) {
