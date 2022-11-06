@@ -34,3 +34,5 @@ function participate(socket){
         timeoutId = setTimeout(waitInterval(), opTimeout);
     });
 }
+
+export default participate

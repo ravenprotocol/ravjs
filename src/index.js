@@ -1,5 +1,4 @@
-
-import {compute} from "./compute.js"
+import participate from './participate.js';
 import {benchmark} from './benchmark.js'
 import {getSocket, initializeHandlers} from "./connect.js"
 
@@ -15,4 +14,4 @@ function initialize(token){
     return socket
 }
 
-export default initialize
+export { initialize, participate }
