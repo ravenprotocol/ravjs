@@ -15,9 +15,8 @@ function initialize(args){
     initializeHandlers(socket);
     socket.connect();
 
-    benchmark(socket)
-
-    return socket
+    // run benchmark so we can submit result to server and get the results
+    benchmark(socket);
 }
 
 export { initialize, participate }

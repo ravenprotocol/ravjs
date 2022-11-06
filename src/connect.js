@@ -21,11 +21,11 @@ function getSocket(token) {
 
 function initializeHandlers(socket){
     socket.on("connect", () => {
-        console.log(socket.connected); // true
+        console.log('socket connected'); // true
     });
 
     socket.on("disconnect", () => {
-        console.log(socket.connected); // false
+        console.log('socket disconnected'); // false
     });
 
     socket.io.on("reconnect_attempt", () => {
@@ -33,10 +33,8 @@ function initializeHandlers(socket){
     });
 
     socket.on("connect_error", (e) => {
-        console.log(e)
-        // socket.auth.token = "abcd";
-        socket.connect();
-        console.log("error")
+        console.log('socket connection error');
+        console.log(e);
     });
 }
 
