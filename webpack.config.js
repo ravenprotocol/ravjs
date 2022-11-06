@@ -6,13 +6,17 @@ const __dirname = dirname(__filename);
 
 export default {
     entry: './src/index.js',
+    experiments: {
+        outputModule: true
+    },
     output: {
         path: resolve(__dirname, 'dist'),
         filename: 'ravjs.js',
+        module: true,
         library: {
-            name: "ravJS",
-            type: "umd"
+            type: "module"
         }
     },
-    target: 'node'
+    target: 'node12.12',
+    mode: 'production',
 };

@@ -1,5 +1,4 @@
 import { RAVENVERSE_HOST } from "./config.js";
-import {performance} from 'perf_hooks'
 import {compute} from "./compute.js";
 import fetch from 'node-fetch';
 
@@ -15,9 +14,9 @@ function benchmark(socket) {
         console.log("Benchmarking ops received");
         let benchmark_results = {};
         for (let op in r) {
-            let t1 = performance.now();
+            let t1 = Date.now();
             compute(r[op]);
-            let t2 = performance.now();
+            let t2 = Date.now();
             benchmark_results[r[op].operator] = t2 - t1;
         }
         console.log("RESULTS");

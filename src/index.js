@@ -15,4 +15,4 @@ function initialize(token){
     return socket
 }
 
-initialize('')
+export default initialize
