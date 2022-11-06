@@ -2,6 +2,7 @@ import * as tfjs from '@tensorflow/tfjs';
 import * as mathjs from 'mathjs';
 import { tfjs_functions, mathjs_functions } from './config.js';
 
+
 function getXY(values, tensor=false){
     
     let x = values[0].value
@@ -18,8 +19,6 @@ function getXY(values, tensor=false){
 }
 
 function compute(payload) {
-    console.log(payload)
-    
 
     let f;
     // var used to transform function parameters to be ts.tensor(array)
@@ -44,10 +43,10 @@ function compute(payload) {
         } 
     }
 
-    return a(payload, f, getXY(payload.values, tensor))
+    return exeFunc(payload, f, getXY(payload.values, tensor))
 }
 
-function a(payload, f, values) {
+function exeFunc(payload, f, values) {
     let result;
 
     try {

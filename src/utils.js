@@ -19,4 +19,10 @@ function getRandom(x, size) {
     }
 }
 
-export default {percentile, getRandom}
+function logger(filename){
+    return (arg) => {
+        console.log(filename, arg)
+    }
+}
+
+export {percentile, getRandom, logger}
