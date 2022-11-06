@@ -14,6 +14,26 @@ let TOKEN=null
 const mathjs_functions = ['inv', 'mode', 'median', 'std', 'variance']
 const tfjs_functions = ['cube', 'foreach', 'find']
 
+
+class Config {
+    constructor(config) {
+        if (Config._instance) {
+        return Config._instance;
+        }
+        Config._instance = this;
+
+        // ... your rest of the constructor code goes after this
+        this.initialized = false;
+        this.RAVENVERSE_HOST = config && config['RAVENVERSE_HOST']
+        this.TOKEN = config && config['TOKEN']
+    }
+
+    initialize(){
+        this.initialized = true;
+    }
+}
+
+
 export  {
     RAVENVERSE_HOST,
     CLIENT_TYPE,
@@ -25,5 +45,6 @@ export  {
     ops,
     TOKEN,
     mathjs_functions,
-    tfjs_functions
+    tfjs_functions,
+    Config
 }

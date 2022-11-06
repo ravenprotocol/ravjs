@@ -1,15 +1,22 @@
-import { RAVENVERSE_HOST } from "./config.js";
+import { Config } from "./config.js";
 import {compute} from "./compute.js";
 import fetch from 'node-fetch';
 
+
+
 function benchmark(socket) {
+    const config = new Config()
     console.log("Benchmark")
 
     console.log("Fetching benchmark ops...")
-    fetch("http://" + RAVENVERSE_HOST + '/ravenjs/get/benchmark/', {
+    fetch("http://" + config.RAVENVERSE_HOST + '/ravenjs/get/benchmark/', {
         mode: "no-cors",
         method: "GET",
-        headers: {"Content-type": "application/json", 'mode': "opaque", 'token': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY4MzYwOTY4LCJpYXQiOjE2NjU3MzI5NjgsImp0aSI6IjExYTZjYzNlNTQ1MzQ1NDM5MmE4NzM1ZmZlMmVjOGQxIiwidXNlcl9pZCI6IjEwMDA0MTM3NzAifQ.XzaEhm_I8HHZsuKwwRx-_Ut_jXNqV6u1WR2RUU7Iw4Y"}
+        headers: {
+            "Content-type": "application/json", 
+            mode: "opaque", 
+            token: config.TOKEN
+        }
     }).then(r => r.json()).then(r => {
         console.log("Benchmarking ops received");
         let benchmark_results = {};

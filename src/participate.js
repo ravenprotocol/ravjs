@@ -1,4 +1,12 @@
+import {Config} from './config.js'
+
 function participate(socket){
+    const config = new Config()
+    if(!config.initialed){
+        console.log('initialize before participating');
+        return;
+    }
+
 
     socket.on('subgraph', function (d) {
         console.log("Subgraph Received...");
