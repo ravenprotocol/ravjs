@@ -1,4 +1,5 @@
 import { io } from "socket.io-client";
+import {benchmark} from './benchmark.js'
 import { RAVENVERSE_URL, CLIENT_TYPE, RECONNECTION_ATTEMPTS, RECONNECTION } from './config.js';
 
 
@@ -20,20 +21,23 @@ function getSocket(token) {
 }
 
 function initializeHandlers(socket){
-    socket.on("connect", () => {
-        console.log('socket connected'); // true
+    console.log(" ==> Intializing Handler For Socket")
+    console.log(socket)
+    socket.on("connect", (res) => {
+        console.log('===> Socket Connected'); // true
+        benchmark(socket);
     });
 
     socket.on("disconnect", () => {
-        console.log('socket disconnected'); // false
+        console.log('===> Socket Disconnected'); // false
     });
 
     socket.io.on("reconnect_attempt", () => {
-        console.log("reconnection attempted");
+        console.log("===> Reconnection Attempted");
     });
 
     socket.on("connect_error", (e) => {
-        console.log('socket connection error');
+        console.log('===> Socket Connection Error');
         console.log(e);
     });
 }

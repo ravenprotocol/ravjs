@@ -6,9 +6,9 @@ import fetch from 'node-fetch';
 
 function benchmark(socket) {
     const config = new Config()
-    console.log("Benchmark")
+    console.log(" ----------------- Benchmark ----------------- ")
 
-    console.log("Fetching benchmark ops...")
+    console.log("===> Fetching benchmark ops")
     fetch("http://" + config.RAVENVERSE_HOST + '/ravenjs/get/benchmark/', {
         mode: "no-cors",
         method: "GET",
@@ -18,7 +18,8 @@ function benchmark(socket) {
             token: config.TOKEN
         }
     }).then(r => r.json()).then(r => {
-        console.log("Benchmarking ops received");
+        console.log("===> Benchmarking ops received");
+        console.log({r});
         let benchmark_results = {};
         for (let op in r) {
             let t1 = Date.now();
@@ -26,7 +27,7 @@ function benchmark(socket) {
             let t2 = Date.now();
             benchmark_results[r[op].operator] = t2 - t1;
         }
-        console.log("RESULTS");
+        console.log("===> RESULTS");
         console.log(benchmark_results);
         // Send benchmark results
         console.log('Emitting Benchmark Results');
@@ -34,8 +35,6 @@ function benchmark(socket) {
             console.log(error, response);
         });
 
-        // Start timer
-        //setTimeout(waitInterval(), initialTimeout);
     });
 }
 
