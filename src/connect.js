@@ -21,8 +21,7 @@ function getSocket(token) {
 }
 
 function initializeHandlers(socket){
-    console.log(" ==> Intializing Handler For Socket")
-    console.log(socket)
+    console.log(" ==> Intializing Handler For Socket");
     socket.on("connect", (res) => {
         console.log('===> Socket Connected'); // true
         benchmark(socket);

@@ -8,7 +8,7 @@ function benchmark(socket) {
     const config = new Config()
     console.log(" ----------------- Benchmark ----------------- ")
 
-    console.log("===> Fetching benchmark ops")
+    console.log("===> Fetching Benchmark Ops")
     fetch("http://" + config.RAVENVERSE_HOST + '/ravenjs/get/benchmark/', {
         mode: "no-cors",
         method: "GET",
@@ -17,9 +17,16 @@ function benchmark(socket) {
             mode: "opaque", 
             token: config.TOKEN
         }
-    }).then(r => r.json()).then(r => {
+    }).then(res =>  Promise.all([res.status, res.json()])).then(([s,r]) => {
+
+        if (s != 200){
+            console.log("==> Error Fetching Benchmark Ops");
+            console.log(r.Error);
+            return;
+        }
+
         console.log("===> Benchmarking ops received");
-        console.log({r});
+       
         let benchmark_results = {};
         for (let op in r) {
             let t1 = Date.now();
