@@ -8,11 +8,14 @@ function initialize(args){
         TOKEN : args && args.hasOwnProperty('token') &&  args.token,
         RAVENVERSE_HOST: args && args.hasOwnProperty('ravenverse_host') && args.ravenverse_host,
     })
-
+    config.initialize();
 
     let socket = getSocket(config.TOKEN);
+    console.log(socket)
     initializeHandlers(socket);
     socket.connect();
+
+    return socket;
 }
 
 export { initialize, participate }

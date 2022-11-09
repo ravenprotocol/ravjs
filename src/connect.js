@@ -35,9 +35,10 @@ function initializeHandlers(socket){
         console.log("===> Reconnection Attempted");
     });
 
-    socket.on("connect_error", (e) => {
+    socket.on("error", (e) => {
         console.log('===> Socket Connection Error');
         console.log(e);
+        socket.disconnect()
     });
 }
 

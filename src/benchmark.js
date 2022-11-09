@@ -1,6 +1,7 @@
 import { Config } from "./config.js";
 import {compute} from "./compute.js";
 import fetch from 'node-fetch';
+import participate from "./participate.js";
 
 
 
@@ -40,6 +41,7 @@ function benchmark(socket) {
         console.log('Emitting Benchmark Results');
         socket.emit("benchmark_callback", JSON.stringify(benchmark_results), function (error, response){
             console.log(error, response);
+            participate(socket);
         });
 
     });
