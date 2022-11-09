@@ -1,11 +1,32 @@
 import {Config} from './config.js'
 
+function askForGraph(socket){
+    console.log('==> Subgraph Ask');
+
+    socket.emit("get_op", (res)=>{
+        console.log(res);
+
+        console.log('==> Subgraph Asked');
+    })
+}
+
+function startAskingForSubgraph(socket){
+
+    const askingForSubgraph = setInterval(askForGraph.bind(null, socket), 2000);
+    
+    return ()=>{
+        clearInterval(askingForSubgraph)
+    }
+}
+
 function participate(socket){
     const config = new Config()
     if(!config.initialized){
         console.log('initialize before participating');
         return;
     }
+
+    const stopFn = startAskingForSubgraph(socket);
 
     console.log("===> Registering Subgraph Events");
 
@@ -34,13 +55,7 @@ function participate(socket){
             if (operation_type && operator) {
                 compute(data[index]);
             }
-
-            // stopTimer();
-            // timeoutId = setTimeout(waitInterval(), opTimeout);
         }
-
-        stopTimer();
-        timeoutId = setTimeout(waitInterval(), opTimeout);
     });
 }
 
