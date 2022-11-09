@@ -3,9 +3,7 @@ import {Config} from './config.js'
 function askForGraph(socket){
     console.log('==> Subgraph Ask');
 
-    socket.emit("get_op", (res)=>{
-        console.log(res);
-
+    socket.emit("get_op", "asking for subgraph", ()=>{
         console.log('==> Subgraph Asked');
     })
 }

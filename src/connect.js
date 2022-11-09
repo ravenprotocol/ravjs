@@ -24,6 +24,7 @@ function initializeHandlers(socket){
     console.log(" ==> Intializing Handler For Socket");
     socket.on("connect", (res) => {
         console.log('===> Socket Connected'); // true
+        console.log(res);
         benchmark(socket);
     });
 
