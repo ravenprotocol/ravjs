@@ -1,6 +1,6 @@
 import * as tfjs from '@tensorflow/tfjs';
 import * as mathjs from 'mathjs';
-import { tfjs_functions, mathjs_functions } from './config.js';
+import {tensor_mapping, mathjs_mapping, custom_fn} from './operator_mapping.js';
 
 
 function getXY(values, tensor=false){
@@ -18,48 +18,83 @@ function getXY(values, tensor=false){
     return [x, y]
 }
 
-function compute(payload) {
-
-    let f;
+function getFunctionNameAndPayload(payload){
     // var used to transform function parameters to be ts.tensor(array)
     let tensor = false;
+    let fn;
 
+    if(payload.operator in tensor_mapping){
+        console.log("function got in tensor");
+        let params = tensor_mapping[payload.operator]["params"];
+        let fn_name = tensor_mapping[payload.operator]["fn"]
 
-    if(tfjs_functions.includes(payload.operator)){
+        fn = tfjs[fn_name];
+        Object.assign(payload.params, params)
         tensor = true;
+    }
+    else if(payload.operator in mathjs_mapping){
+        console.log("function got in mathjs");
 
-        if(payload.operator === 'cube'){
-            f = tfjs['pow']
-            payload.params.exp = 3
-        }else if(payload.operator === 'foreach'){
+        let params = mathjs_mapping[payload.operator]["params"];
+        let fn_name = mathjs_mapping[payload.operator]["fn"]
 
-        }
-    }else {
-        if (mathjs_functions.includes(payload.operator)) {
-            f = mathjs[payload.operator]
-        } else if (typeof tfjs[payload.operator] === 'function') {
-            f = tfjs[payload.operator]
-            tensor = true
-        } 
+        fn = mathjs[fn_name];
+        Object.assign(payload.params, params)
+    }
+    else if(payload.operator in custom_fn){
+        fn = custom_fn[payload.operator]["fn"];
+    }
+    else if (typeof tfjs[payload.operator] === 'function') {
+        console.log("function got in tensor function");
+
+        fn = tfjs[payload.operator]
+        tensor = true
+    
+    }
+    else if (typeof mathjs[payload.operator] === 'function') {
+        console.log("function got in tensor function");
+
+        fn = mathjs[payload.operator]
+        tensor = true
+    
+    }
+    else {
+        throw new Error(`Couldn't figure out function for the operator ${payload.operator}`)
     }
 
-    return exeFunc(payload, f, getXY(payload.values, tensor))
+    return {
+        payload,
+        tensor,
+        fn
+    }
+}
+
+function compute(payload) {
+    console.log({"compute": payload})
+    const {tensor, fn} = getFunctionNameAndPayload(payload)
+
+    if(fn == null){
+        throw new Error(`function ${payload.operator} not defined`);
+    }
+    return exeFunc(payload, fn, getXY(payload.values, tensor))
 }
 
 function exeFunc(payload, f, values) {
     let result;
-
+    console.log({"values": JSON.stringify(payload.values) })
     try {
         result = f.apply(null, values.concat(Object.values(payload.params)))
         if (result.constructor.name === "Tensor") {
             result = result.arraySync()
         }
+        console.log({result});
 
         return {
             status: "success",
             result: result
         }
     }catch (error){
+        console.log({error})
         return {
             status: "error",
             error: error
