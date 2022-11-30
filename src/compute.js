@@ -3,19 +3,26 @@ import * as mathjs from 'mathjs';
 import {tensor_mapping, mathjs_mapping, custom_fn} from './operator_mapping.js';
 
 
-function getXY(values, tensor=false){
+function getXY(values){
     
-    let x = values[0].value
-    let y
+    let x = values[0].value;
     if (values.length == 2){
-        y = values[1].value
+        let y = values[1].value;
+        return [x, y];
     }
 
-    if (tensor){
-        return [tfjs.tensor(x), y && tfjs.tensor(y)]
-    }
+    return [x];
+}
 
-    return [x, y]
+function makePayloadTensor(values){
+    let x = tfjs.tensor(values[0]);
+    
+    if (values.length == 2){
+       let y = tfjs.tensor(values[1]);
+       return [x, y];
+    } 
+
+    return [x];
 }
 
 function getFunctionNameAndPayload(payload){
@@ -52,11 +59,9 @@ function getFunctionNameAndPayload(payload){
     
     }
     else if (typeof mathjs[payload.operator] === 'function') {
-        console.log("function got in tensor function");
+        console.log("function got in math.js function");
 
-        fn = mathjs[payload.operator]
-        tensor = true
-    
+        fn = mathjs[payload.operator]    
     }
     else {
         throw new Error(`Couldn't figure out function for the operator ${payload.operator}`)
@@ -76,29 +81,38 @@ function compute(payload) {
     if(fn == null){
         throw new Error(`function ${payload.operator} not defined`);
     }
-    return exeFunc(payload, fn, getXY(payload.values, tensor))
+
+    let args = getXY(payload.values);
+    if(tensor){
+        args = makePayloadTensor(args);
+    }
+    console.log({"values": JSON.stringify(payload.values) });
+
+    return exeFunc(fn, args, payload.params)
 }
 
-function exeFunc(payload, f, values) {
-    let result;
-    // console.log({"values": JSON.stringify(payload.values) })
-    try {
-        result = f.apply(null, values.concat(Object.values(payload.params)))
-        if (result.constructor.name === "Tensor") {
-            result = result.arraySync()
-        }
-        // console.log({result});
+function exeFunc(fn, values, params) {
+    console.log({"values": JSON.stringify(values) });
 
-        return {
-            status: "success",
-            result: result
-        }
+    let result;
+    try {
+        result = fn.apply(null, values.concat(Object.values(params)));
     }catch (error){
         console.log({error})
         return {
             status: "error",
             error: error
         }
+    }
+
+    if (result.constructor.name === "Tensor") {
+        result = result.arraySync()
+    }
+    // console.log({result});
+
+    return {
+        status: "success",
+        result: result
     }
 }
 
