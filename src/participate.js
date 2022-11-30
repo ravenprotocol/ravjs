@@ -136,8 +136,11 @@ function participate(){
 
             let compute_payload = await parseOps(ops, op);
             const result = compute(compute_payload);
-            console.log("pushing result for " + op_id);
-            console.log({result});
+
+            if(result['status'] == "error"){
+                throw new Error(`Compute function failed for op_id ${op_id}`);
+            }
+            
             ops[op_id]['result'] = result['result'];
             
             // uploadResult(op);

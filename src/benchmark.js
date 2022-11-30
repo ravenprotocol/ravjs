@@ -15,7 +15,12 @@ function benchmark(socket) {
 
         for (let op in r) {
             let t1 = Date.now();
-            compute(r[op]);
+            const result = compute(r[op]);
+
+            if(result['status'] == "error"){
+                throw new Error(`Compute function failed for op_id ${r[op]['op_id']}`);
+            }
+
             let t2 = Date.now();
             benchmark_results[r[op].operator] = t2 - t1;
         }
