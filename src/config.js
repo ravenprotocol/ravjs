@@ -1,45 +1,42 @@
-/**
- * Configuration file
- */
-const RAVENVERSE_HOST = "xyz.com:8081";
-const CLIENT_TYPE = "client";
-const GET_GRAPHS_URL = 'http://' + RAVENVERSE_HOST + '/graph/get/all/';
-const RAVENVERSE_URL = 'ws://' + RAVENVERSE_HOST + '/' + CLIENT_TYPE;
-const RECONNECTION_ATTEMPTS = 5;
-const RECONNECTION = true;
-let outputs = {}
-let ops = []
-let TOKEN=null
 
 
 class Config {
-    constructor(config) {
-        if (Config._instance) {
-        return Config._instance;
-        }
-        Config._instance = this;
 
-        // ... your rest of the constructor code goes after this
-        this.initialized = false;
+    constructor(config) {
         this.RAVENVERSE_HOST = config && config['RAVENVERSE_HOST']
         this.TOKEN = config && config['TOKEN']
+        this.CLIENT_TYPE = "client";
+        this.GET_GRAPHS_URL = 'http://' + this.RAVENVERSE_HOST + '/graph/get/all/';
+        this.RAVENVERSE_URL = 'ws://' + this.RAVENVERSE_HOST + '/' + this.CLIENT_TYPE;
+        this.RECONNECTION_ATTEMPTS = 5;
+        this.RECONNECTION = true;
     }
 
-    initialize(){
-        this.initialized = true;
+    setValue(config){
+        this.RAVENVERSE_HOST = config && config['RAVENVERSE_HOST']
+        this.TOKEN = config && config['TOKEN']
+        this.CLIENT_TYPE = "client";
+        this.GET_GRAPHS_URL = 'http://' + this.RAVENVERSE_HOST + '/graph/get/all/';
+        this.RAVENVERSE_URL = 'ws://' + this.RAVENVERSE_HOST + '/' + this.CLIENT_TYPE;
+        this.RECONNECTION_ATTEMPTS = 5;
+        this.RECONNECTION = true;
     }
+
 }
 
 
-export  {
-    RAVENVERSE_HOST,
-    CLIENT_TYPE,
-    GET_GRAPHS_URL,
-    RAVENVERSE_URL,
-    RECONNECTION_ATTEMPTS,
-    RECONNECTION,
-    outputs,
-    ops,
-    TOKEN,
-    Config
-}
+class Singleton {
+
+    constructor() {
+        if (!Singleton.instance) {
+            Singleton.instance = new Config();
+        }
+    }
+  
+    getInstance() {
+        return Singleton.instance;
+    }
+  
+  }
+  
+export default new Singleton().getInstance();

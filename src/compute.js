@@ -81,13 +81,13 @@ function compute(payload) {
 
 function exeFunc(payload, f, values) {
     let result;
-    console.log({"values": JSON.stringify(payload.values) })
+    // console.log({"values": JSON.stringify(payload.values) })
     try {
         result = f.apply(null, values.concat(Object.values(payload.params)))
         if (result.constructor.name === "Tensor") {
             result = result.arraySync()
         }
-        console.log({result});
+        // console.log({result});
 
         return {
             status: "success",

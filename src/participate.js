@@ -1,18 +1,21 @@
-import {Config, ops} from './config.js';
+import config from './config.js';
 import {compute} from './compute.js';
 import fetch from 'node-fetch';
+import Socket from './socket.js';
 
-function askForGraph(socket){
+
+function askForGraph(){
     console.log('==> Subgraph Ask');
 
+    const socket = Socket.getSocket();
     socket.emit("get_op", "asking for subgraph", ()=>{
         console.log('==> Subgraph Asked');
     })
 }
 
-function startAskingForSubgraph(socket){
+function startAskingForSubgraph(){
 
-    const askingForSubgraph = setInterval(askForGraph.bind(null, socket), 2000);
+    const askingForSubgraph = setInterval(askForGraph, 2000);
     
     return ()=>{
         clearInterval(askingForSubgraph)
@@ -44,7 +47,6 @@ async function parseOps(ops, payload){
     const values_payload = payload_cp['values'];
     delete payload_cp['values'];
 
-    const config = new Config()
 
     // build values
     for(let i in values_payload){
@@ -92,13 +94,8 @@ function uploadResult(op){
     })
 }
 
-function participate(socket){
-    const config = new Config()
-    if(!config.initialized){
-        console.log('initialize before participating');
-        return;
-    }
-
+function participate(){
+    const socket = Socket.getSocket();
     const stopFn = startAskingForSubgraph(socket);
 
     console.log("===> Registering Subgraph Events");
@@ -111,7 +108,6 @@ function participate(socket){
        
         
         let data = d['payloads'];
-        console.log(data)
         let ops = {};
         let results = []
         for (let index in data) {
@@ -139,8 +135,6 @@ function participate(socket){
             // });
 
             let compute_payload = await parseOps(ops, op);
-            // console.log("compute_payload");
-            // console.log(JSON.stringify(compute_payload));
             const result = compute(compute_payload);
             console.log("pushing result for " + op_id);
             console.log({result});

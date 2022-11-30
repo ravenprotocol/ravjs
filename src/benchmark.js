@@ -1,4 +1,4 @@
-import { Config } from "./config.js";
+import config from "./config.js";
 import {compute} from "./compute.js";
 import fetch from 'node-fetch';
 import participate from "./participate.js";
@@ -6,7 +6,6 @@ import participate from "./participate.js";
 
 
 function benchmark(socket) {
-    const config = new Config()
     console.log(" ----------------- Benchmark ----------------- ")
 
     console.log("===> Fetching Benchmark Ops")
